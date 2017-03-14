@@ -1,0 +1,46 @@
+---
+- hosts: centos7
+  remote_user: vagrant
+  become: yes
+  tasks: 
+        - name: Install basic packages
+          yum: name={{ item }} state=present
+          with_items:
+                - mtr
+                - iputils.x86_64
+                - iproute.x86_64
+                - nmap.x86_64
+                - tcpdump.x86_64
+                - net-tools.x86_64  
+                - vim
+
+- hosts: self
+  remote_user: vagrant
+  become: yes
+  tasks:
+        - name: Install basic packages
+          yum: name={{ item }} state=present
+          with_items:
+                - mtr
+                - iputils.x86_64
+                - iproute.x86_64
+                - nmap.x86_64
+                - tcpdump.x86_64
+                - net-tools.x86_64
+                - vim
+
+- hosts: ubuntu
+  remote_user: vagrant
+  become: yes
+  tasks:
+        - name: Install basic packages
+          apt: name={{ item }} state=present
+          with_items:
+                - mtr
+                - iputils.x86_64
+                - iproute.x86_64
+                - nmap.x86_64
+                - tcpdump.x86_64
+                - net-tools.x86_64
+                - vim
+

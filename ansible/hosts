@@ -1,0 +1,15 @@
+[ubuntu]
+10.10.10.100
+10.10.10.150
+
+[centos7]
+10.10.10.200
+10.10.10.250
+10.10.10.25
+
+[linux]
+10.10.10.50
+
+[self]
+localhost ansible_connection=local
+
