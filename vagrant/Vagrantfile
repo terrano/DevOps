@@ -1,0 +1,65 @@
+# -*- mode: ruby -*-
+
+# vi: set ft=ruby :
+
+Vagrant.configure(2) do |config|
+	config.vm.provision "shell", inline: "echo Hello all!"
+	
+	config.vm.define "FTP" do |ftp|
+		ftp.vm.box = "centos/7"
+		ftp.vm.network "public_network", use_dhcp_assigned_default_route: true, bridg
+e: "wlp2s0"
+		ftp.vm.network "private_network", ip: "10.10.10.200"
+		#ftp.vm.network "forwarded_port", guest: 22, host: 2221
+		ftp.vm.provision "shell", inline: "echo FTP is UP!"
+	end
+
+	config.vm.define "WEB" do |web|
+		web.vm.box     = "ubuntu/trusty64"
+		web.vm.network "public_network", use_dhcp_assigned_default_route: true, bridg
+e: "wlp2s0"
+		web.vm.network "private_network", ip: "10.10.10.100"
+		#web.vm.network "forwarded_port", guest: 22, host: 2222
+                web.vm.provision "shell", inline: "echo Web is UP!"
+	end
+
+        config.vm.define "DOC" do |doc|
+                doc.vm.box     = "ubuntu/trusty64"
+                doc.vm.network "public_network", use_dhcp_assigned_default_route: true, bridg
+e: "wlp2s0"
+                doc.vm.network "private_network", ip: "10.10.10.150"
+                #doc.vm.network "forwarded_port", guest: 22, host: 2223
+		doc.vm.provision "shell", inline: "echo Docker_machine is UP!"
+		doc.vm.synced_folder "/home/ihor/vagrant/shared_folder", "/host_share"
+        end
+
+        config.vm.define "LIN" do |lin|
+                lin.vm.box     = "akost/linux-mint-17-kde"
+                lin.vm.network "public_network", use_dhcp_assigned_default_route: true, bridg
+e: "wlp2s0"
+                lin.vm.network "private_network", ip: "10.10.10.50"
+		#lin.vm.network "forwarded_port", guest: 22, host: 2224
+		lin.vm.provision "shell", inline: "echo LinuxMint is UP!"
+		lin.vm.synced_folder "/home/ihor/vagrant/shared_folder", "/host_share"
+        end
+	
+	config.vm.define "CHEF" do |chef|
+		chef.vm.box = "centos/7"
+		chef.vm.network "public_network", use_dhcp_assigned_default_route: true, brid
+ge: "wlp2s0"
+		chef.vm.network "private_network", ip: "10.10.10.250"
+		#chef.vm.network "forwarded_port", guest: 22, host: 2225
+		chef.vm.provision "shell", inline: "echo CHEF is UP!"
+		chef.vm.synced_folder "/home/ihor/vagrant/shared_folder", "/host_share"
+	end
+	
+	config.vm.define "ANS" do |ans|
+		ans.vm.box = "centos/7"
+		ans.vm.network "public_network", use_dhcp_assigned_default_route: true, bridg
+e: "wlp2s0"
+		ans.vm.network "private_network", ip: "10.10.10.25"
+		#ans.vm.network "forwarded_port", guest: 22, host: 2225
+		ans.vm.provision "shell", inline: "echo ANS is UP!"
+		ans.vm.synced_folder "/home/ihor/vagrant/shared_folder", "/host_share"
+	end
+end
