@@ -12,6 +12,7 @@
                 - nmap.x86_64
                 - tcpdump.x86_64
                 - net-tools.x86_64  
+                - tree
                 - vim
 
 - hosts: self
@@ -27,6 +28,7 @@
                 - nmap.x86_64
                 - tcpdump.x86_64
                 - net-tools.x86_64
+                - tree
                 - vim
 
 - hosts: ubuntu
@@ -34,13 +36,15 @@
   become: yes
   tasks:
         - name: Install basic packages
-          apt: name={{ item }} state=present
+          apt:  name={{ item }} state=present
           with_items:
                 - mtr
-                - iputils.x86_64
-                - iproute.x86_64
-                - nmap.x86_64
-                - tcpdump.x86_64
-                - net-tools.x86_64
+                - iputils-ping
+                - iputils-tracepath
+                - iproute
+                - nmap
+                - tcpdump
+                - net-tools
+                - tree
                 - vim
 
