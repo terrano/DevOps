@@ -1,0 +1,2 @@
+sudo /etc/init.d/php_fcgi start
+systemctl status php-fastcgi.service

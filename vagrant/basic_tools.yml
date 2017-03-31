@@ -14,7 +14,6 @@
                 - net-tools.x86_64  
                 - tree
                 - vim
-                - mc
 
 - hosts: self
   remote_user: vagrant
@@ -31,7 +30,6 @@
                 - net-tools.x86_64
                 - tree
                 - vim
-                - mc
 
 - hosts: ubuntu
   remote_user: vagrant
@@ -49,4 +47,4 @@
                 - net-tools
                 - tree
                 - vim
-                - mc
+

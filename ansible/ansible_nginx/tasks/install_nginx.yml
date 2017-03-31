@@ -1,0 +1,29 @@
+- name: NGINX | Installing NGINX repo rpm
+  yum:
+    name: http://nginx.org/packages/centos/7/noarch/RPMS/nginx-release-centos-7-0.el7.ngx.noarch.rpm
+ 
+- name: NGINX | Installing NGINX
+  yum:
+    name: nginx
+    state: latest
+
+- name: "PHP | Installing php"
+  with_items: 
+    - php.x86_64
+    - php-cli.x86_64
+    - php-fpm.x86_64
+    - php-intl.x86_64
+    - php-mysql.x86_64
+    - php-xml.x86_64
+    - spawn-fcgi.x86_64
+    - make.x86_64 
+    - automake.noarch
+    - gcc.x86_64
+    - gcc-c++.x86_64
+    - wget
+  yum: "name={{ item }} state=present"
+
+- name: NGINX | Starting NGINX
+  service:
+    name: nginx
+    state: started
