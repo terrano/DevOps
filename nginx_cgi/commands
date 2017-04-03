@@ -1,2 +1,7 @@
 sudo /etc/init.d/php_fcgi start
 systemctl status php-fastcgi.service
+
+Links:
+https://www.if-not-true-then-false.com/2009/install-nginx-php-5-3-and-fastcgi-on-centos-fedora-red-hat-rhel/
+https://www.digitalocean.com/community/tutorials/how-to-install-linux-nginx-mysql-php-lemp-stack-on-centos-6
+
