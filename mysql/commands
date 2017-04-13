@@ -1,0 +1,42 @@
+sudo yum install mariadb-server mariadb
+sudo systemctl start mariadb.service
+
+/usr/bin/mysqladmin -u root password 'new-password'
+/usr/bin/mysql -u root -p
+
+
+mysqldump -u root -p --all-databases --master-data > dbdump.db
+mysql> UNLOCK TABLES;
+scp dbdump.db root@10.10.10.225:~
+
+#########################################################################
+Replication:
+sudo yum install mariadb-server mariadb
+sudo systemctl start mariadb.service
+
+CHANGE MASTER TO MASTER_HOST='10.10.10.250',MASTER_USER='reuser', MASTER_PASSWORD='re_user', MASTER_LOG_FILE='mysql-bin.000002', MASTER_LOG_POS=  465;
+#########################################################################
+
+CREATE USER 'reuser'@'localhost' IDENTIFIED BY 're_user';
+SET PASSWORD FOR 'reuser'@'localhost' = PASSWORD('re_user');
+SELECT USER, PASSWORD, HOST FROM mysql.user;
+DROP USER 'reuser'@'localhost';
+
+SHOW MASTER STATUS;
+GRANT REPLICATION SLAVE ON *.* TO 'reuser'@'%' IDENTIFIED BY 're_user';
+FLUSH PRIVILEGES;
+SHOW GRANTS FOR 'reuser'@'%';
+FLUSH TABLES WITH READ LOCK;
+UNLOCk TABLES;
+
+use mydb;
+CREATE TABLE employee (c int);
+INSERT INTO employee (c) VALUES (123);
+SELECT * FROM employee;
+delete from employee where c = (3);
+
+#########################################################################
+https://support.rackspace.com/how-to/installing-mysql-server-on-centos/
+http://www.tecmint.com/how-to-setup-mysql-master-slave-replication-in-rhel-centos-fedora/
+
+
