@@ -1,0 +1,26 @@
+$TTL    604800
+@	IN	SOA	devops	admin.devops (
+			3	;Serial
+			604800	;Refresh
+			86400	;Retry
+			2419200	;Expire
+			604800 );Negative Cache TTL
+;
+; named server - NS records
+	IN	NS	ns1.devops.
+	IN	NS	ns2.devops.
+
+; name servers - A records
+ns1.devops.	IN	A	10.10.10.75
+ns2.devops.	IN	A	10.10.10.200
+
+; 10.10.10.0/24 A records
+man.devops.	IN	A	10.10.10.75
+repo.devops.	IN	A	10.10.10.200
+web.devops.	IN	A	10.10.10.100
+doc.devops.	IN	A	10.10.10.150
+lin.devops.	IN	A	10.10.10.50
+mysql.devops.	IN	A	10.10.10.250
+mysb.devops.	IN	A	10.10.10.225
+ans.devops.	IN	A	10.10.10.25
+nginx.devops.	IN	A	10.10.10.125

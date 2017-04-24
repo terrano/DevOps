@@ -1,0 +1,11 @@
+zone "devops" {
+	type slave;
+	file "slaves/db.devops"; #zone file
+	masters { 10.10.10.75; }; #ns1
+};
+
+zone "10.10.10.in-addr.arpa" {
+	type slave;
+	file "slaves/db.10.10.10"; #10.10.10.0/24 subnet
+	masters { 10.10.10.75; }; #ns1
+};

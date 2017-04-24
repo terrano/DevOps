@@ -1,0 +1,9 @@
+zone "devops" {
+	type master;
+	file "/etc/named/zones/db.devops"; #zone file
+};
+
+zone "10.10.10.in-addr.arpa" {
+	type master;
+	file "/etc/named/zones/db.10.10.10"; #10.10.10.0/24 subnet
+};

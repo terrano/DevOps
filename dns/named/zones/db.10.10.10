@@ -1,0 +1,20 @@
+@	IN	SOA	devops   admin.devops (
+                        3       ;Serial
+                        604800  ;Refresh
+                        86400   ;Retry
+                        2419200 ;Expire
+                        604800 );Negative Cache TTL
+
+; named server - NS records
+        IN      NS      ns1.devops.
+
+; PTR Records
+75	IN	PTR	ns1.devops.	; 10.10.10.75
+200	IN	PTR	repo.devops.	; 10.10.10.200
+100	IN	PTR	web.devops.	; 10.10.10.100
+150	IN	PTR	doc.devops.	; 10.10.10.150
+50	IN	PTR	lin.devops.	; 10.10.10.50
+250	IN	PTR	mysql.devops.	; 10.10.10.250
+225	IN	PTR	mysb.devops.	; 10.10.10.225
+25	IN	PTR	ans.devops.	; 10.10.10.25
+125	IN	PTR	nginx.devops.	; 10.10.10.125
