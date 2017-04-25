@@ -1,0 +1,21 @@
+#!/bin/bash
+
+# Stopping DB
+mysql -u root -pmy_sql -e 'STOP SLAVE;'
+
+# trying to backup DB
+mysqldump --all-databases > db_backup/mydb1.db
+
+# Recording the resault of backup
+res=$?
+
+# Starting DB
+mysql -u root -pmy_sql -e 'START SLAVE;'
+
+if [ $res -eq '0' ]; 
+then
+	# If backup was successfull, remove old backup
+	rm db_backup/mydb.db
+	# rename new backup
+	mv  db_backup/mydb1.db  db_backup/mydb.db
+fi
