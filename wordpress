@@ -1,0 +1,35 @@
+https://codex.wordpress.org/Installing_WordPress#Using_the_MySQL_Client
+---------------------------------------------------------------------------------------------------
+[nginx] vagrant ~$ wget https://wordpress.org/latest.tar.gz
+[nginx] vagrant ~$ tar -xzvf latest.tar.gz 
+---------------------------------------------------------------------------------------------------
+[MYSQL] vagrant ~$ mysql -u root -p
+MariaDB [mydb]> grant all privileges on mydb to "wp"@"10.10.10.125" identified by "wp_mysql";
+MariaDB [mydb]> flush privileges;
+---------------------------------------------------------------------------------------------------
+[nginx] vagrant html$ sudo vim /usr/share/nginx/html/wp-config.php
+/** MySQL database username */
+define('DB_USER', 'wp');
+
+/** MySQL database password */
+define('DB_PASSWORD', 'wp_mysql');
+
+/** MySQL hostname */
+define('DB_HOST', '10.10.10.250');
+---------------------------------------------------------------------------------------------------
+You can use this plugin to check SSL events etc: https://wordpress.org/plugins/really-simple-ssl/
+Go to your nginx folder:   cd /etc/nginx
+sudo mkdir /etc/nginx/ssl.{key,crt,csr}
+sudo openssl genrsa  -out /etc/nginx/ssl.key/nginx.devops.key 2048
+sudo openssl req -new -key /etc/nginx/ssl.key/nginx.devops.key -out /etc/nginx/ssl.csr/nginx.devops.csr
+* DO NOT CREATE ANY PASSWORDS
+sudo openssl x509 -req -days 365 -in /etc/nginx/ssl.csr/nginx.devops.csr -signkey /etc/nginx/ssl.key/nginx.devops.key -out /etc/nginx/ssl.crt/nginx.devops.crt
+Modify your site config file in nginx. Add to the server part of config:
+listen 443;
+server_name nginx.devops;
+ssl on;
+ssl_certificate /etc/nginx/ssl.crt/nginx.devops.crt;
+ssl_certificate_key /etc/nginx/ssl.key/nginx.devops.key;
+ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+ssl_ciphers “HIGH:!aNULL:!MD5 or HIGH:!aNULL:!MD5:!3DES”;
+sudo systemctl restart nginx
