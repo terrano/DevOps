@@ -2,12 +2,12 @@
 Vagrant.configure(2) do |config|
 	config.vm.provision "shell", inline: "echo Hello all!"
 	
-	config.vm.define "FTP" do |ftp|
-		ftp.vm.box = "centos/7"
-		ftp.vm.network "public_network", use_dhcp_assigned_default_route: true, bridge: "eth0"
-		ftp.vm.network "private_network", ip: "10.10.10.200"
-		ftp.vm.provision "shell", inline: "echo FTP is UP!"
-		ftp.vm.synced_folder "/home/ikohut/git_folder", "/host_share"
+	config.vm.define "REPO" do |repo|
+		repo.vm.box = "centos/7"
+		repo.vm.network "public_network", use_dhcp_assigned_default_route: true, bridge: "eth0"
+		repo.vm.network "private_network", ip: "10.10.10.200"
+		repo.vm.provision "shell", inline: "echo REPO is UP!"
+		repo.vm.synced_folder "/home/ikohut/git_lohika", "/host_share"
 	end
 
 	config.vm.define "WEB" do |web|
@@ -15,39 +15,47 @@ Vagrant.configure(2) do |config|
 		web.vm.network "public_network", use_dhcp_assigned_default_route: true, bridge: "eth0"
 		web.vm.network "private_network", ip: "10.10.10.100"
                 web.vm.provision "shell", inline: "echo Web is UP!"
-		web.vm.synced_folder "/home/ikohut/git_folder", "/host_share"
+		web.vm.synced_folder "/home/ikohut/git_lohika", "/host_share"
 	end
 
-        config.vm.define "DOC" do |doc|
-                doc.vm.box     = "ubuntu/trusty64"
-                doc.vm.network "public_network", use_dhcp_assigned_default_route: true, bridge: "eth0"
-                doc.vm.network "private_network", ip: "10.10.10.150"
-		doc.vm.provision "shell", inline: "echo Docker_machine is UP!"
-		doc.vm.synced_folder "/home/ikohut/git_folder", "/host_share"
-        end
+        config.vm.define "ZBX" do |zbx|
+                zbx.vm.box     = "ubuntu/trusty64"
+                zbx.vm.network "public_network", use_dhcp_assigned_default_route: true, bridge: "eth0"
+                zbx.vm.network "private_network", ip: "10.10.10.150"
+		zbx.vm.provision "shell", inline: "echo ZBX machine is UP!"
+		zbx.vm.synced_folder "/home/ikohut/git_lohika", "/host_share"
+	end
 
         config.vm.define "LIN" do |lin|
                 lin.vm.box     = "akost/linux-mint-17-kde"
                 lin.vm.network "public_network", use_dhcp_assigned_default_route: true, bridge: "eth0"
                 lin.vm.network "private_network", ip: "10.10.10.50"
 		lin.vm.provision "shell", inline: "echo LinuxMint is UP!"
-		lin.vm.synced_folder "/home/ikohut/git_folder", "/host_share"
+		lin.vm.synced_folder "/home/ikohut/git_lohika", "/host_share"
         end
 	
-	config.vm.define "CHEF" do |chef|
-		chef.vm.box = "centos/7"
-		chef.vm.network "public_network", use_dhcp_assigned_default_route: true, bridge: "eth0"
-		chef.vm.network "private_network", ip: "10.10.10.250"
-		chef.vm.provision "shell", inline: "echo CHEF is UP!"
-		chef.vm.synced_folder "/home/ikohut/git_folder", "/host_share"
+	config.vm.define "MYSQL" do |mysql|
+		mysql.vm.box = "centos/7"
+		mysql.vm.network "public_network", use_dhcp_assigned_default_route: true, bridge: "eth0"
+		mysql.vm.network "private_network", ip: "10.10.10.250"
+		mysql.vm.provision "shell", inline: "echo MySQL is UP!"
+		mysql.vm.synced_folder "/home/ikohut/git_lohika", "/host_share"
 	end
+
+        config.vm.define "MYSB" do |mysb|
+                mysb.vm.box = "centos/7"
+                mysb.vm.network "public_network", use_dhcp_assigned_default_route: true, bridge: "eth0"
+                mysb.vm.network "private_network", ip: "10.10.10.225"
+                mysb.vm.provision "shell", inline: "echo MySB is UP!"
+                mysb.vm.synced_folder "/home/ikohut/git_lohika", "/host_share"
+        end
 	
 	config.vm.define "ANS" do |ans|
 		ans.vm.box = "centos/7"
 		ans.vm.network "public_network", use_dhcp_assigned_default_route: true, bridge: "eth0"
 		ans.vm.network "private_network", ip: "10.10.10.25"
 		ans.vm.provision "shell", inline: "echo ANS is UP!"
-		ans.vm.synced_folder "/home/ikohut/git_folder", "/host_share"
+		ans.vm.synced_folder "/home/ikohut/git_lohika", "/host_share"
 	end
 
 	config.vm.define "MAN" do |man|
@@ -55,7 +63,7 @@ Vagrant.configure(2) do |config|
 		man.vm.network "public_network", use_dhcp_assigned_default_route: true, bridge: "eth0"
 		man.vm.network "private_network", ip: "10.10.10.75"
 		man.vm.provision "shell", inline: "echo Manager is UP"
-		man.vm.synced_folder "/home/ikohut/git_folder", "/host_share"
+		man.vm.synced_folder "/home/ikohut/git_lohika", "/host_share"
 	end
 
 	config.vm.define "NGINX" do |ngnx|
@@ -63,7 +71,7 @@ Vagrant.configure(2) do |config|
 		ngnx.vm.network "public_network", use_dhcp_assigned_default_route: true, bridge: "eth0"
 		ngnx.vm.network "private_network", ip: "10.10.10.125"
                 ngnx.vm.provision "shell", inline: "echo NGINX is UP!"
-		ngnx.vm.synced_folder "/home/ikohut/git_folder", "/host_share"
+		ngnx.vm.synced_folder "/home/ikohut/git_lohika", "/host_share"
 	end
 
 end
