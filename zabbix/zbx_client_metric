@@ -1,0 +1,1 @@
+UserParameter=mysql.slave_lag,mysql -u root -pmy_sql -e "show slave status" -E | grep Relay_Log_Pos | cut -d: -f2

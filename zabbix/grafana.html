@@ -1,0 +1,951 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>How To Install and Configure Grafana to Plot Beautiful Graphs from Zabbix on CentOS 7 | DigitalOcean</title>
+
+<meta name="description" content="Use Grafana and Zabbix to create a custom dashboard that displays data about your servers.">
+<meta name="keywords" content="Monitoring">
+
+<meta name="og:title" content="How To Install and Configure Grafana to Plot Beautiful Graphs from Zabbix on CentOS 7 | DigitalOcean">
+<meta name="og:description" content="Use Grafana and Zabbix to create a custom dashboard that displays data about your servers.">
+<meta name="og:site_name" content="DigitalOcean">
+<meta name="og:type" content="article">
+
+<meta name="twitter:site" content="DigitalOcean">
+<meta name="twitter:title" content="How To Install and Configure Grafana to Plot Beautiful Graphs from Zabbix on CentOS 7 | DigitalOcean">
+<meta name="twitter:description" content="Use Grafana and Zabbix to create a custom dashboard that displays data about your servers.">
+<meta name="twitter:creator" content="DigitalOcean">
+<meta name="twitter:card" content="photo" />
+<meta name="twitter:url" content="https://www.digitalocean.com/community/tutorials/how-to-install-and-configure-grafana-to-plot-beautiful-graphs-from-zabbix-on-centos-7"/>
+
+<meta property='og:image' content="https://www.digitalocean.com/assets/community/default_community_sharing-65c1cc547375d6e37cc45195b3686769.png">
+<meta name="twitter:image" content="https://www.digitalocean.com/assets/community/default_community_sharing-65c1cc547375d6e37cc45195b3686769.png">
+
+  <link rel='canonical' href='https://www.digitalocean.com/community/tutorials/how-to-install-and-configure-grafana-to-plot-beautiful-graphs-from-zabbix-on-centos-7'>
+
+
+    <link rel="stylesheet" media="all" href="/assets/community/application-bdfc2d8fb85ad3fae4a82273144bb2f0.css" />
+
+    
+    <meta name="csrf-param" content="authenticity_token" />
+<meta name="csrf-token" content="1vChWufOPidrJXf8ARDj95gLCq3QhB8gO0pq8rtNvYTC1JjVAhaSLguba2OLMsQO3nGJZNPPsSDslW6RdP0zTg==" />
+      <script src="https://use.typekit.net/izu1uqu.js"></script>
+      <script>try{Typekit.load({ async: true });}catch(e){}</script>
+    <script
+      src="https://d2wy8f7a9ursnm.cloudfront.net/bugsnag-2.min.js"
+      data-apikey="9ffc01bc3e1fa7891bfd20909d1bfb0e">
+    </script>
+    <!--<script src="//cdn.optimizely.com/js/701281621.js"></script>-->
+    <script type="text/javascript">
+      if(window.analytics=window.analytics||[],window.analytics.included)window.console&&console.error&&console.error("analytics.js included twice");else{window.analytics.included=!0,window.analytics.methods=["identify","group","track","page","pageview","alias","ready","on","once","off","trackLink","trackForm","trackClick","trackSubmit"],window.analytics.factory=function(a){return function(){var n=Array.prototype.slice.call(arguments);return n.unshift(a),window.analytics.push(n),window.analytics}};for(var i=0;i<window.analytics.methods.length;i++){var key=window.analytics.methods[i];window.analytics[key]=window.analytics.factory(key)}window.analytics.load=function(a){var n=document.createElement("script");n.type="text/javascript",n.async=!0,n.src=("https:"===document.location.protocol?"https://":"http://")+"cdn.segment.com/analytics.js/v1/"+a+"/analytics.min.js";var t=document.getElementsByTagName("script")[0];t.parentNode.insertBefore(n,t)},window.analytics.SNIPPET_VERSION="2.0.9",
+      window.analytics.load("puo3uv968t")}
+      window.analytics.page();
+    </script>
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+    <link rel="alternate" type="application/rss+xml" title="RSS" href="/community/tutorials/feed">
+    <script src="https://cdn.polyfill.io/v2/polyfill.min.js"></script>
+    <script>
+      window.comApp = {
+        prefix: '/community',
+        svgIconPath: 'https://www.digitalocean.com/assets/community/icon-sprite-d76eb75d70ccf8ffb4c0b47b7dbc88ca.svg',
+        railsEnv: 'production',
+        rootUrl: 'https://www.digitalocean.com/community'
+      };
+    </script>
+    
+    <script src="/assets/community/application-696ac533a18a8d515d9ba94d8863d059.js"></script>
+  </head>
+  <body class="feature-filter-bar feature-upvotes tutorials-controller tutorial-single" data-env="production" data-prefix="/community" data-user-id="" data-facebook-app-id="694818843983011"   data-completed-tutorial-id="" data-tutorial-id="2106" data-js="tutorial"
+>
+    <script>
+//<![CDATA[
+
+//]]>
+</script>
+<!-- Google Tag Manager -->
+<noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-KHWBBT"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-KHWBBT');</script>
+<!-- End Google Tag Manager -->
+
+    
+
+    <div class='outside_viewport'>
+        <div id="contents-modal" class="modal fade mini-modal" style="display: none;">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1>Contents</h1>
+          <button class="close-button icon icon-close-light" data-dismiss="modal" aria-label="close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="table-of-contents-modal"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="share-modal" class="modal fade mini-modal" style="display: none;">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1>Share</h1>
+        <button type="button" class="close-button icon icon-close-light" aria-label="close" data-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="social-sharing social-sharing-container">
+          <ul class="top ">
+            <li class="shareBtn" id="sbTwitter">
+              <a href="http://twitter.com/share?text=How To Install and Configure Grafana to Plot Beautiful Graphs from Zabbix on CentOS 7&amp;url=https://www.digitalocean.com/community/tutorials/how-to-install-and-configure-grafana-to-plot-beautiful-graphs-from-zabbix-on-centos-7?utm_content=how-to-install-and-configure-grafana-to-plot-beautiful-graphs-from-zabbix-on-centos-7&amp;utm_medium=community&amp;utm_source=twshare" class="share-icon share-popup" title="Share on Twitter" >
+                <span class="sIcon icon-bird"></span>
+              </a>
+              <a href="http://twitter.com/share?text=How To Install and Configure Grafana to Plot Beautiful Graphs from Zabbix on CentOS 7&amp;url=https://www.digitalocean.com/community/tutorials/how-to-install-and-configure-grafana-to-plot-beautiful-graphs-from-zabbix-on-centos-7?utm_content=how-to-install-and-configure-grafana-to-plot-beautiful-graphs-from-zabbix-on-centos-7&amp;utm_medium=community&amp;utm_source=twshare" class="share-link share-popup" title="Share on Twitter" >
+                Twitter
+              </a>
+            </li>
+            <li class="shareBtn" id="sbFacebook">
+              <a class="share-icon facebook-share" href="https://www.digitalocean.com/community/tutorials/how-to-install-and-configure-grafana-to-plot-beautiful-graphs-from-zabbix-on-centos-7?utm_content=how-to-install-and-configure-grafana-to-plot-beautiful-graphs-from-zabbix-on-centos-7&amp;utm_medium=community&amp;utm_source=fbshare" onclick="" title="Share on Facebook">
+                <span class="sIcon icon-facebook-B"></span>
+              </a>
+
+              <a class="share-link facebook-share" href="https://www.digitalocean.com/community/tutorials/how-to-install-and-configure-grafana-to-plot-beautiful-graphs-from-zabbix-on-centos-7?utm_content=how-to-install-and-configure-grafana-to-plot-beautiful-graphs-from-zabbix-on-centos-7&amp;utm_medium=community&amp;utm_source=fbshare" onclick="" title="Share on Facebook">
+                Facebook
+              </a>
+            </li>
+            <li class="shareBtn" id="sbGoogle">
+              <a href="https://plus.google.com/share?url=https://www.digitalocean.com/community/tutorials/how-to-install-and-configure-grafana-to-plot-beautiful-graphs-from-zabbix-on-centos-7?utm_content=how-to-install-and-configure-grafana-to-plot-beautiful-graphs-from-zabbix-on-centos-7&amp;utm_medium=community&amp;utm_source=gpshare" class="share-icon share-popup" title="Share on Google+">
+                <span class="sIcon icon-google-plus-B"></span>
+              </a>
+              <a href="https://plus.google.com/share?url=https://www.digitalocean.com/community/tutorials/how-to-install-and-configure-grafana-to-plot-beautiful-graphs-from-zabbix-on-centos-7?utm_content=how-to-install-and-configure-grafana-to-plot-beautiful-graphs-from-zabbix-on-centos-7&amp;utm_medium=community&amp;utm_source=gpshare" class="share-link share-popup" title="Share on Google+">
+                Google+
+              </a>
+            </li>
+            <li class="shareBtn" id="sbYC">
+              <a href="https://news.ycombinator.com/submitlink?t=How To Install and Configure Grafana to Plot Beautiful Graphs from Zabbix on CentOS 7&amp;u=https://www.digitalocean.com/community/tutorials/how-to-install-and-configure-grafana-to-plot-beautiful-graphs-from-zabbix-on-centos-7?utm_content=how-to-install-and-configure-grafana-to-plot-beautiful-graphs-from-zabbix-on-centos-7&amp;utm_medium=community&amp;utm_source=hnshare" class="share-icon share-popup" target="_blank" title="Submit to Hacker News">
+                <span class="sIcon icon-hacker-news"></span>
+              </a>
+              <a href="https://news.ycombinator.com/submitlink?t=How To Install and Configure Grafana to Plot Beautiful Graphs from Zabbix on CentOS 7&amp;u=https://www.digitalocean.com/community/tutorials/how-to-install-and-configure-grafana-to-plot-beautiful-graphs-from-zabbix-on-centos-7?utm_content=how-to-install-and-configure-grafana-to-plot-beautiful-graphs-from-zabbix-on-centos-7&amp;utm_medium=community&amp;utm_source=hnshare" class="share-link share-popup" target="_blank" title="Submit to Hacker News">
+                Hacker News
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+  <div class="table-of-contents">
+    <div data-js="tableOfContentsDesktop"></div>
+    <button type="button" class="Button--reset Tutorial-button " data-js="markAsComplete" data-tutorialInteraction data-tutorialSingle><svg class='svg-icon svg-icon-completed'><use xlink:href='https://www.digitalocean.com/assets/community/icon-sprite-d76eb75d70ccf8ffb4c0b47b7dbc88ca.svg#icon-completed'></use></svg><span>Mark as Complete</span></button>
+  </div>
+  
+  <div id="share-modal" class="modal fade mini-modal" style="display: none;">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1>Share</h1>
+        <button type="button" class="close-button icon icon-close-light" aria-label="close" data-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="social-sharing social-sharing-container">
+          <ul class="bottom ">
+            <li class="shareBtn" id="sbTwitter">
+              <a href="http://twitter.com/share?text=How To Install and Configure Grafana to Plot Beautiful Graphs from Zabbix on CentOS 7&amp;url=https://www.digitalocean.com/community/tutorials/how-to-install-and-configure-grafana-to-plot-beautiful-graphs-from-zabbix-on-centos-7?utm_content=how-to-install-and-configure-grafana-to-plot-beautiful-graphs-from-zabbix-on-centos-7&amp;utm_medium=community&amp;utm_source=twshare" class="share-icon share-popup" title="Share on Twitter" >
+                <span class="sIcon icon-bird"></span>
+              </a>
+              <a href="http://twitter.com/share?text=How To Install and Configure Grafana to Plot Beautiful Graphs from Zabbix on CentOS 7&amp;url=https://www.digitalocean.com/community/tutorials/how-to-install-and-configure-grafana-to-plot-beautiful-graphs-from-zabbix-on-centos-7?utm_content=how-to-install-and-configure-grafana-to-plot-beautiful-graphs-from-zabbix-on-centos-7&amp;utm_medium=community&amp;utm_source=twshare" class="share-link share-popup" title="Share on Twitter" >
+                Twitter
+              </a>
+            </li>
+            <li class="shareBtn" id="sbFacebook">
+              <a class="share-icon facebook-share" href="https://www.digitalocean.com/community/tutorials/how-to-install-and-configure-grafana-to-plot-beautiful-graphs-from-zabbix-on-centos-7?utm_content=how-to-install-and-configure-grafana-to-plot-beautiful-graphs-from-zabbix-on-centos-7&amp;utm_medium=community&amp;utm_source=fbshare" onclick="" title="Share on Facebook">
+                <span class="sIcon icon-facebook-B"></span>
+              </a>
+
+              <a class="share-link facebook-share" href="https://www.digitalocean.com/community/tutorials/how-to-install-and-configure-grafana-to-plot-beautiful-graphs-from-zabbix-on-centos-7?utm_content=how-to-install-and-configure-grafana-to-plot-beautiful-graphs-from-zabbix-on-centos-7&amp;utm_medium=community&amp;utm_source=fbshare" onclick="" title="Share on Facebook">
+                Facebook
+              </a>
+            </li>
+            <li class="shareBtn" id="sbGoogle">
+              <a href="https://plus.google.com/share?url=https://www.digitalocean.com/community/tutorials/how-to-install-and-configure-grafana-to-plot-beautiful-graphs-from-zabbix-on-centos-7?utm_content=how-to-install-and-configure-grafana-to-plot-beautiful-graphs-from-zabbix-on-centos-7&amp;utm_medium=community&amp;utm_source=gpshare" class="share-icon share-popup" title="Share on Google+">
+                <span class="sIcon icon-google-plus-B"></span>
+              </a>
+              <a href="https://plus.google.com/share?url=https://www.digitalocean.com/community/tutorials/how-to-install-and-configure-grafana-to-plot-beautiful-graphs-from-zabbix-on-centos-7?utm_content=how-to-install-and-configure-grafana-to-plot-beautiful-graphs-from-zabbix-on-centos-7&amp;utm_medium=community&amp;utm_source=gpshare" class="share-link share-popup" title="Share on Google+">
+                Google+
+              </a>
+            </li>
+            <li class="shareBtn" id="sbYC">
+              <a href="https://news.ycombinator.com/submitlink?t=How To Install and Configure Grafana to Plot Beautiful Graphs from Zabbix on CentOS 7&amp;u=https://www.digitalocean.com/community/tutorials/how-to-install-and-configure-grafana-to-plot-beautiful-graphs-from-zabbix-on-centos-7?utm_content=how-to-install-and-configure-grafana-to-plot-beautiful-graphs-from-zabbix-on-centos-7&amp;utm_medium=community&amp;utm_source=hnshare" class="share-icon share-popup" target="_blank" title="Submit to Hacker News">
+                <span class="sIcon icon-hacker-news"></span>
+              </a>
+              <a href="https://news.ycombinator.com/submitlink?t=How To Install and Configure Grafana to Plot Beautiful Graphs from Zabbix on CentOS 7&amp;u=https://www.digitalocean.com/community/tutorials/how-to-install-and-configure-grafana-to-plot-beautiful-graphs-from-zabbix-on-centos-7?utm_content=how-to-install-and-configure-grafana-to-plot-beautiful-graphs-from-zabbix-on-centos-7&amp;utm_medium=community&amp;utm_source=hnshare" class="share-link share-popup" target="_blank" title="Submit to Hacker News">
+                Hacker News
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+      
+    </div>
+
+      <div class="mobile-nav">
+  
+<div class="account-buttons">
+    <div id="entrance">
+      <a id="sign-up" class="button" href="/community/auth/digitalocean?display=sessionless+register">Sign Up</a>
+      <a id="log-in" class="button" href="/community/auth/digitalocean">Log In</a>
+    </div>
+</div>
+
+  <button type="button" aria-label="close" class="close-panel icon-close"></button>
+
+  <form class="mobile-search" role="search" action="/community/search" accept-charset="UTF-8" method="get"><input name="utf8" type="hidden" value="&#x2713;" />
+    <span class='icon icon-search-thin'></span>
+    <input type="text" name="q" id="q" title="Search" placeholder="Search" />
+    <button name="button" type="submit" class="icon-btn">submit</button>
+</form>
+  
+<nav>
+
+  <ul>
+    <li><a class="active" href="/community/tutorials">Tutorials</a></li>
+    <li><a href="/community/questions">Questions</a></li>
+    <li><a href="/community/projects">Projects</a></li>
+    <li><a href="https://www.meetup.com/pro/digitalocean/?utm_source=do_community" target="_blank">Meetups</a></li>
+    <li class="mobile-nav-only"><a href="https://www.digitalocean.com/">Main Site</a></li>
+  </ul>
+</nav>
+
+  
+</div>
+
+      
+      <header>
+  <div class="flash-container"></div>
+
+  <div class='main-menu-container'>
+    <div class='wrapper'>
+      <div class='logo'>
+        <a class="logo-icon" href="https://www.digitalocean.com/">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 190 32" class="do-icon">
+<title>DigitalOcean</title>
+<path class="path1" d="M16.016 32v-6.204c6.584 0 11.648-6.52 9.147-13.42-0.95-2.564-2.975-4.59-5.539-5.539-6.9-2.501-13.42 2.564-13.42 9.147 0 0 0 0 0 0l-6.204 0.032c0-10.477 10.129-18.643 21.112-15.225 4.811 1.488 8.609 5.317 10.097 10.097 3.418 10.983-4.716 21.112-15.193 21.112z"></path>
+<path class="path2" d="M16.016 25.828h-6.172v-6.172h6.172z"></path>
+<path class="path3" d="M9.844 30.576h-4.748v-4.748h4.748v4.748z"></path>
+<path class="path4" d="M5.096 25.828h-3.988v-3.988h3.988z"></path>
+<path class="path5" d="M56.973 9.242c-1.836-1.266-4.115-1.931-6.773-1.931h-5.792v18.39h5.792c2.659 0 4.938-0.665 6.773-2.026 1.013-0.696 1.804-1.709 2.342-2.944s0.823-2.69 0.823-4.336c0-1.614-0.285-3.070-0.823-4.305-0.538-1.203-1.329-2.152-2.342-2.849zM47.794 10.445h1.836c2.026 0 3.703 0.411 4.969 1.171 1.393 0.855 2.121 2.469 2.121 4.779 0 2.406-0.728 4.083-2.121 5.001v0c-1.203 0.791-2.88 1.203-4.938 1.203h-1.867v-12.154z"></path>
+<path class="path6" d="M64.19 7.122c-0.57 0-1.044 0.19-1.424 0.57s-0.601 0.855-0.601 1.393c0 0.57 0.19 1.044 0.601 1.424 0.38 0.38 0.855 0.601 1.424 0.601s1.044-0.19 1.424-0.601c0.38-0.38 0.601-0.886 0.601-1.424 0-0.57-0.19-1.044-0.601-1.393-0.38-0.38-0.886-0.57-1.424-0.57z"></path>
+<path class="path7" d="M62.512 12.787h3.26v12.977h-3.26v-12.977z"></path>
+<path class="path8" d="M77.642 13.864c-0.981-0.886-2.089-1.393-3.26-1.393-1.804 0-3.292 0.633-4.463 1.836s-1.741 2.785-1.741 4.653c0 1.836 0.57 3.387 1.741 4.653 1.171 1.203 2.659 1.836 4.463 1.836 1.266 0 2.342-0.348 3.228-1.044v0.285c0 1.076-0.285 1.899-0.855 2.5-0.57 0.57-1.361 0.855-2.342 0.855-1.519 0-2.437-0.601-3.608-2.152l-2.216 2.121 0.063 0.095c0.475 0.665 1.203 1.329 2.184 1.962s2.184 0.95 3.64 0.95c1.931 0 3.513-0.601 4.653-1.773 1.171-1.171 1.741-2.754 1.741-4.716v-11.743h-3.197v1.076zM76.787 21.523c-0.57 0.633-1.298 0.95-2.247 0.95s-1.678-0.317-2.216-0.95c-0.57-0.633-0.855-1.488-0.855-2.532s0.285-1.931 0.855-2.564c0.57-0.633 1.298-0.981 2.216-0.981 0.95 0 1.678 0.317 2.247 0.981 0.57 0.633 0.855 1.519 0.855 2.564s-0.317 1.899-0.855 2.532z"></path>
+<path class="path9" d="M83.624 12.787h3.26v12.977h-3.26v-12.977z"></path>
+<path class="path10" d="M85.302 7.122c-0.57 0-1.044 0.19-1.424 0.57s-0.601 0.855-0.601 1.393c0 0.57 0.19 1.044 0.601 1.424 0.38 0.38 0.855 0.601 1.424 0.601s1.044-0.19 1.424-0.601c0.38-0.38 0.601-0.886 0.601-1.424 0-0.57-0.19-1.044-0.601-1.393-0.38-0.38-0.886-0.57-1.424-0.57z"></path>
+<path class="path11" d="M94.038 9.274h-3.197v3.513h-1.867v2.975h1.867v5.381c0 1.678 0.348 2.88 1.013 3.577s1.836 1.044 3.513 1.044c0.538 0 1.076-0.032 1.583-0.063h0.158v-2.975l-1.108 0.063c-0.791 0-1.298-0.127-1.551-0.411s-0.38-0.855-0.38-1.709v-4.906h3.039v-2.975h-3.039v-3.513z"></path>
+<path class="path12" d="M112.364 7.343h3.26v18.39h-3.26v-18.39z"></path>
+<path class="path13" d="M148.574 21.112c-0.57 0.665-1.171 1.234-1.646 1.519v0c-0.443 0.285-1.013 0.443-1.678 0.443-0.95 0-1.741-0.348-2.374-1.076s-0.95-1.646-0.95-2.754 0.317-2.026 0.918-2.722c0.633-0.728 1.393-1.076 2.342-1.076 1.044 0 2.152 0.665 3.102 1.773l2.152-2.057c-1.393-1.836-3.197-2.69-5.349-2.69-1.804 0-3.355 0.665-4.621 1.931s-1.899 2.912-1.899 4.843 0.633 3.545 1.899 4.843c1.266 1.298 2.817 1.931 4.621 1.931 2.374 0 4.273-1.013 5.539-2.88l-2.057-2.026z"></path>
+<path class="path14" d="M161.962 14.591c-0.475-0.633-1.108-1.171-1.867-1.551-0.791-0.38-1.678-0.57-2.69-0.57-1.836 0-3.323 0.665-4.431 1.994-1.076 1.329-1.646 2.944-1.646 4.874 0 1.962 0.601 3.577 1.804 4.843 1.171 1.234 2.785 1.867 4.716 1.867 2.184 0 4.020-0.886 5.349-2.659l0.063-0.095-2.121-2.057c-0.19 0.253-0.475 0.506-0.728 0.76-0.317 0.317-0.633 0.538-0.95 0.696-0.475 0.253-1.044 0.348-1.646 0.348-0.918 0-1.646-0.253-2.216-0.791-0.538-0.475-0.855-1.139-0.918-1.962h8.641l0.032-1.203c0-0.855-0.127-1.646-0.348-2.406-0.222-0.728-0.57-1.456-1.044-2.089zM154.841 17.63c0.158-0.633 0.443-1.139 0.855-1.551 0.443-0.443 1.013-0.665 1.709-0.665 0.791 0 1.393 0.222 1.804 0.665 0.38 0.411 0.601 0.918 0.665 1.519h-5.033z"></path>
+<path class="path15" d="M174.497 13.737v0c-0.981-0.855-2.342-1.266-4.051-1.266-1.076 0-2.089 0.253-3.007 0.696-0.855 0.443-1.678 1.139-2.216 2.089l0.032 0.032 2.089 1.994c0.855-1.361 1.804-1.836 3.070-1.836 0.696 0 1.234 0.19 1.678 0.538s0.633 0.823 0.633 1.393v0.633c-0.823-0.253-1.614-0.38-2.406-0.38-1.614 0-2.944 0.38-3.925 1.139s-1.488 1.867-1.488 3.229c0 1.203 0.411 2.216 1.266 2.944 0.855 0.696 1.899 1.076 3.134 1.076s2.406-0.506 3.45-1.361v1.076h3.197v-8.324c0.063-1.583-0.443-2.817-1.456-3.672zM168.704 20.795c0.38-0.253 0.886-0.38 1.551-0.38 0.791 0 1.614 0.158 2.469 0.475v1.266c-0.696 0.665-1.646 0.981-2.817 0.981-0.57 0-1.013-0.127-1.298-0.38s-0.443-0.538-0.443-0.95c0-0.443 0.19-0.76 0.538-1.013z"></path>
+<path class="path16" d="M188.55 13.99c-0.918-1.013-2.184-1.519-3.798-1.519-1.298 0-2.342 0.38-3.134 1.108v-0.791h-3.197v12.977h3.26v-7.185c0-0.981 0.222-1.773 0.696-2.311 0.475-0.57 1.076-0.823 1.931-0.823 0.728 0 1.298 0.253 1.709 0.728 0.411 0.506 0.633 1.171 0.633 2.026v7.501h3.26v-7.47c0-1.804-0.443-3.229-1.361-4.241z"></path>
+<path class="path17" d="M108.281 13.737v0c-0.981-0.855-2.342-1.266-4.051-1.266-1.076 0-2.089 0.253-3.007 0.696-0.855 0.443-1.678 1.139-2.216 2.089l0.032 0.032 2.089 1.994c0.855-1.361 1.804-1.836 3.070-1.836 0.696 0 1.234 0.19 1.678 0.538s0.633 0.823 0.633 1.393v0.633c-0.823-0.253-1.614-0.38-2.406-0.38-1.614 0-2.944 0.38-3.925 1.139s-1.488 1.867-1.488 3.229c0 1.203 0.411 2.216 1.266 2.944 0.855 0.696 1.899 1.076 3.134 1.076s2.406-0.506 3.45-1.361v1.076h3.197v-8.324c0.032-1.583-0.475-2.817-1.456-3.672zM102.489 20.795c0.38-0.253 0.886-0.38 1.551-0.38 0.791 0 1.614 0.158 2.469 0.475v1.266c-0.696 0.665-1.646 0.981-2.817 0.981-0.57 0-1.013-0.127-1.298-0.38s-0.443-0.538-0.443-0.95c0-0.443 0.158-0.76 0.538-1.013z"></path>
+<path class="path18" d="M127.462 26.018c-5.223 0-9.496-4.241-9.496-9.496s4.241-9.496 9.496-9.496 9.496 4.241 9.496 9.496-4.273 9.496-9.496 9.496zM127.462 10.382c-3.387 0-6.14 2.754-6.14 6.14s2.754 6.14 6.14 6.14 6.14-2.754 6.14-6.14-2.754-6.14-6.14-6.14z"></path>
+</svg>
+
+          <span class="sr-only">DigitalOcean</span>
+</a>
+        <span class="logo-separator"></span>
+
+        <a class="home-link" href="/community">
+          <span class='logo-community-text'>Community</span>
+</a>      </div>
+
+      <a class="mobile-nav-toggle icon-menu-thin" data-role="left">
+        <span>Menu</span>
+      </a>
+
+      
+<nav>
+
+  <ul>
+    <li><a class="active" href="/community/tutorials">Tutorials</a></li>
+    <li><a href="/community/questions">Questions</a></li>
+    <li><a href="/community/projects">Projects</a></li>
+    <li><a href="https://www.meetup.com/pro/digitalocean/?utm_source=do_community" target="_blank">Meetups</a></li>
+    <li class="mobile-nav-only"><a href="https://www.digitalocean.com/">Main Site</a></li>
+  </ul>
+</nav>
+
+
+      
+<div class="account-buttons">
+    <div id="entrance">
+      <a id="sign-up" class="button" href="/community/auth/digitalocean?display=sessionless+register">Sign Up</a>
+      <a id="log-in" class="button" href="/community/auth/digitalocean">Log In</a>
+    </div>
+</div>
+      <div class='header-search open'>
+  <form action="/community/search" accept-charset="UTF-8" method="get"><input name="utf8" type="hidden" value="&#x2713;" />
+    <span class='icon icon-search-thin'></span>
+    <input type="text" name="q" id="q" title="Search" placeholder="Search" autocomplete="off" spellcheck="false" class="header-search-input" data-algolia-application-id="6ZHEUVKJ88" data-algolia-api-key="c5470567eae7fa1177d43222e18ba086" />
+    <button name="button" type="submit" class="icon-btn">submit</button>
+</form></div>
+
+<div class="search-results-dropdown dropdown" data-root-path="https://www.digitalocean.com/community">
+  <div class="container">
+    <div class='header-search-results-list'></div>
+
+    <div id="btn-wrap">
+      <a class="more-search-results" data-search-path="/community/search" href="/community/search">
+        <span class='icon-mag'></span>
+        View All Results
+</a>    </div>
+  </div>
+</div>
+
+<script type='text/template' id='autocomplete-hits-template'>
+  <div class="inner-search">
+    <ul>
+        {{#hits}}
+          <li>
+            <span class='icon icon-{{type}}'></span>
+            <a href='{{url}}'>{{title}}</a>
+          </li>
+        {{/hits}}
+    </ul>
+  </div>
+</script>
+
+
+      <div class='clearfix'></div>
+    </div>
+  </div>
+
+  <div class='wrapper'>
+    
+  </div>
+</header>
+
+
+      
+
+      <div class='wrapper layout-wrapper'>
+
+        
+
+
+
+
+
+
+
+
+
+<div class="section-content section-content-growable content Tutorial-content">
+  <div class='postable-info-bar-container'>
+  <div class='postable-info-bar'>
+    <div class='left-section'>
+        <div class='tutorial-author-avatar'>
+    <a href="/community/users/neformat"><img alt="neformat" class="avatar avatar-small" src="https://secure.gravatar.com/avatar/88f85d1c53eae5038f135b1a670b0858?secure=true&d=identicon" width="80" height="80" /></a>
+  </div>
+  <div class='author-and-date'>
+    <div class='tutorial-author'>
+      <div class='by'>By: </div>
+      <a href="/community/users/neformat">Vadym Kalsin</a>
+    </div>
+  </div>
+
+      
+    </div>
+
+    <div class='right-section'>
+      
+
+
+      <div class="section-item section-item-subscribe">
+  <span class="opt-in-switch off signed-out-subscribe">
+    <span class="subscribe-label">
+      <span class="icon icon-subscribe"></span>
+      <span class="subscription-label subscribe">Subscribe</span>
+      <span class="icon icon-subscribed"></span>
+      <span class="subscription-label subscribed">Subscribed</span>
+    </span>
+    <a data-toggle="modal" data-target="#sign-in-modal" class="mini-switch-container" href="javascript:void(0);"><div class="mini-switch off signed-out-subscribe"><div class="switch-handle"></div></div></a>
+  </span>
+</div>
+
+<div class='section-item social-sharing-item'>
+  <div class="sharing">
+  <a class="share-button" href="#" data-toggle="modal" data-target="#share-modal">
+    <span class="icon icon-share-square"></span>
+    <span class="share-button-text">Share</span>
+  </a>
+</div>
+
+</div>
+
+        <div class='section-item table-of-contents-triggers'><div class="toc-trigger-mobile" data-toggle="modal" data-target="#contents-modal">
+  <a href="javascript:void(0);">
+    <span class="icon icon-contents"></span>
+    <span class="title">Contents</span>
+    <span class="icon icon-arrow-down"></span>
+  </a>
+</div>
+
+</div>
+
+    </div>
+  </div>
+</div>
+
+
+
+  <div class="container tutorial-header">
+
+      <div class='info-cta'>
+    <a class="icon-close-light" href="javascript:void();"></a>
+    We hope you find this tutorial helpful. In addition to guides like this one, we provide simple cloud infrastructure for developers. <a href="https://www.digitalocean.com/?utm_medium=community&amp;utm_source=community_gencta&amp;utm_campaign=needaserver&amp;utm_content=how-to-install-and-configure-grafana-to-plot-beautiful-graphs-from-zabbix-on-centos-7">
+        Learn more &rarr;
+</a>  </div>
+
+
+    <button name="button" type="button" class="new-upvote-button" data-upvotable-id="2106" data-upvotable-type="Tutorial" data-include-caret="true"><span class="icon new-upvote-icon"><svg class='svg-icon svg-icon-upvote-empty'><use xlink:href='https://www.digitalocean.com/assets/community/icon-sprite-d76eb75d70ccf8ffb4c0b47b7dbc88ca.svg#icon-upvote-empty'></use></svg></span><span class="new-upvote-count">3</span></button>
+
+    <h1 class="content-title Tutorial-header">
+      <button type="button" class="Button--reset Tutorial-headerButton " data-toggle="tooltip" title="Mark as Complete" data-js="markAsComplete" data-tutorialInteraction data-tutorialSingle>
+        <svg class='svg-icon svg-icon-completed'><use xlink:href='https://www.digitalocean.com/assets/community/icon-sprite-d76eb75d70ccf8ffb4c0b47b7dbc88ca.svg#icon-completed'></use></svg>
+      </button> How To Install and Configure Grafana to Plot Beautiful Graphs from Zabbix on CentOS 7
+    </h1>
+
+    <span class="meta-section timestamp"><span class="tutorial-date-text">Posted</span><span class="tutorial-date">November 13, 2016</span></span>
+
+    <span class="meta-section pageviews"><span class="icon icon-eye v-mid"></span><span class="views-count v-mid">27.9k</span><span class="sr-only"> views</span></span>
+
+    <span class="meta-section tags">
+      <a class="tag" href="/community/tags/monitoring?type=tutorials">Monitoring</a>
+      <a class="tag" href="/community/tags/centos?type=tutorials">CentOS</a>
+    </span>
+  </div>
+    <div class="content-body tutorial-content" data-growable-markdown>
+      <h3 id="introduction">Introduction</h3>
+
+<p>Zabbix is a great monitoring tool that collects data from servers, virtual machines, and other kinds of network devices so you can analyze it for trends or problems.  It has feature-rich notifications on emerging issues, but the built-in tools for data analysis and visualization are not easy to use. You can combine graphs into dashboards, but first you need to create them, and there is practically no easy way to create graphs that display real-time data. Also,to there is no way to collect data from different hosts onto a single graph. While the situation is getting better with each new release, it is far from ideal.</p>
+
+<p>Grafana is a good alternative to Zabbix's dashboards. It lets you create graphs and dashboards based on data from various monitoring systems, and it specializes in the display and analysis of this data. It is lightweight, easy to install, and it looks beautiful.</p>
+
+<p>In this tutorial, you'll install Grafana and configure it to display data from Zabbix, and you'll learn how to compose your own custom dashboard that monitors CPU and file usage.</p>
+
+<h2 id="prerequisites">Prerequisites</h2>
+
+<p>To follow this tutorial, you will need:</p>
+
+<ul>
+<li>Two CentOS 7 servers configured with sudo non-root users, with Zabbix installed on one server, and the Zabbix client installed on the other server. Follow the tutorial <a href="https://www.digitalocean.com/community/tutorials/how-to-install-and-configure-zabbix-to-securely-monitor-remote-servers-on-centos-7">How To Install and Configure Zabbix to Securely Monitor Remote Servers on CentOS 7</a> and its prerequisites to configure these servers.</li>
+</ul>
+
+<h2 id="step-1-—-installing-grafana">Step 1 — Installing Grafana</h2>
+
+<p>Before we can use Grafana, we need to install it. We'll use the same server we used for the Zabbix server. Log in to your Zabbix server with your non-root user: </p>
+<pre class="code-pre command local-environment"><code langs=""><ul class="prefixed"><li class="line" prefix="$">ssh <span class="highlight">sammy</span>@<span class="highlight">your_zabbix_server_ip_address</span>
+</li></ul></code></pre>
+<p>Grafana isn't available through the package manager by default, so we will set up the repository configuration file. First, create a new repository file for Grafana:</p>
+<pre class="code-pre command"><code langs=""><ul class="prefixed"><li class="line" prefix="$">sudo vi /etc/yum.repos.d/grafana.repo
+</li></ul></code></pre>
+<p>Paste the following configuration data into the file:</p>
+<div class="code-label " title="/etc/yum.repos.d/grafana.repo">/etc/yum.repos.d/grafana.repo</div><pre class="code-pre "><code langs="">[grafana]
+name=grafana
+baseurl=https://packagecloud.io/grafana/stable/el/6/$basearch
+repo_gpgcheck=1
+enabled=1
+gpgcheck=1
+gpgkey=https://packagecloud.io/gpg.key https://grafanarel.s3.amazonaws.com/RPM-GPG-KEY-grafana
+sslverify=1
+sslcacert=/etc/pki/tls/certs/ca-bundle.crt
+</code></pre>
+<p>Then save and exit the text editor and run the following command to install Grafana:</p>
+<pre class="code-pre command"><code langs=""><ul class="prefixed"><li class="line" prefix="$">sudo yum install grafana
+</li></ul></code></pre>
+<p>During the installation process you will be asked to import a GPG key. Confirm that you wish to import this key so the installation can continue.</p>
+
+<p>Once the installation completes, start the Grafana service:</p>
+<pre class="code-pre command"><code langs=""><ul class="prefixed"><li class="line" prefix="$">sudo systemctl daemon-reload
+</li><li class="line" prefix="$">sudo systemctl start grafana-server
+</li></ul></code></pre>
+<p>Then check whether the Grafana service is running properly:</p>
+<pre class="code-pre command"><code langs=""><ul class="prefixed"><li class="line" prefix="$">sudo systemctl status grafana-server
+</li></ul></code></pre>
+<p>You will see the following status:</p>
+<pre class="code-pre "><code langs=""><div class="secondary-code-label " title="Output">Output</div>● grafana-server.service - Starts and stops a single grafana instance on this system
+   Loaded: loaded (/usr/lib/systemd/system/grafana-server.service; enabled; vendor preset: disabled)
+   <span class="highlight">Active: active (running) since Mon 2016-11-07 06:18:27 UTC; 1 day 4h ago</span>
+     Docs: http://docs.grafana.org
+ Main PID: 16639 (grafana-server)
+  ...
+</code></pre>
+<p>Finally, enable the service to start at boot time: </p>
+<pre class="code-pre command"><code langs=""><ul class="prefixed"><li class="line" prefix="$">sudo systemctl enable  grafana-server
+</li></ul></code></pre>
+<p>Grafana is running, so let's install the component that lets Grafana pull data from Zabbix.</p>
+
+<h2 id="step-2-—-installing-the-zabbix-plugin-for-grafana">Step 2 — Installing the Zabbix Plugin for Grafana</h2>
+
+<p>You can extend Grafana's functionality by installing plugins. You can explore the available plugins <a href="https://grafana.net/plugins">here</a>. There are three types of plugins:</p>
+
+<ul>
+<li><strong>Panels</strong>: new blocks that can be used on the dashboard, such as pie charts or histograms.</li>
+<li><strong>Data sources</strong>: new storage backends for your time series data, so you can pull data from other sources.</li>
+<li><strong>Apps</strong>: complex plugins that bundle data sources and panels within a single package.</li>
+</ul>
+
+<p>We will use the <a href="https://grafana.net/plugins/alexanderzobnin-zabbix-app">Zabbix app</a> plugin,  which includes a Zabbix data source, a triggers panel, a Zabbix server dashboard, and a template to view data.</p>
+
+<p>The easiest way to install plugins is by using the CLI tool <code>grafana-cli</code> which is bundled with Grafana. Run the following command to install the Zabbix App plugin:</p>
+<pre class="code-pre command"><code langs=""><ul class="prefixed"><li class="line" prefix="$">sudo grafana-cli plugins install alexanderzobnin-zabbix-app
+</li></ul></code></pre>
+<p>You will see the following output, indicating that the plugin was installed:</p>
+<pre class="code-pre "><code langs=""><div class="secondary-code-label " title="Output">Output</div>✔ Installed alexanderzobnin-zabbix-app successfully
+</code></pre>
+<p>Whenever you add or modify plugins, you must restart  <code>grafana-server</code> for the changes to take effect.</p>
+<pre class="code-pre command"><code langs=""><ul class="prefixed"><li class="line" prefix="$">sudo systemctl restart grafana-server
+</li></ul></code></pre>
+<p>With the plugin installed, you can log in to Grafana and configure it to talk to Zabbix.</p>
+
+<h2 id="step-3-—-configuring-the-zabbix-plugin">Step 3 — Configuring the Zabbix Plugin</h2>
+
+<p>Log in to the Grafana web interface by navigating to the address <code>http://<span class="highlight">your_zabbix_server_ip_address</span>:3000</code>.</p>
+
+<p><span class='note'><strong>Note</strong>: Grafana listens for incoming connections on port <code>3000</code>. If you have a firewall configured, you'll need to open this port. Review <a href="https://www.digitalocean.com/community/tutorials/additional-recommended-steps-for-new-centos-7-servers">this tutorial</a> to learn about the firewall in CentOS if you run into issues.<br></span></p>
+
+<p>The default login credentials are <code><span class="highlight">admin</span>/<span class="highlight">admin</span></code>. You can change your password on the <strong>Profile</strong> page once you log in. When you log in, you'll be greeted by the <strong>Home</strong> dashboard.</p>
+
+<p><img src="https://assets.digitalocean.com/articles/grafana_zabbix_cent7/uPwU0Li.png" alt="Home dashboard"></p>
+
+<p>Access Grafana's main menu by clicking on the Grafana logo in the top left corner of the user interface. Then select <strong>Plugins.</strong> Then select the <strong>Apps</strong> tab. Then click on the Zabbix app and enable it by pressing the <strong>Enable</strong> button.</p>
+
+<p>Now you can add a new data source. Select the Grafana logo again and navigate to <strong>Data sources.</strong> Then click the <strong>Add data source</strong> button. You will see the configuration page for the data source:</p>
+
+<p><img src="https://assets.digitalocean.com/articles/grafana_zabbix_cent7/69rHGUx.png" alt="Add data source"></p>
+
+<p>Configure the data source as follows:</p>
+
+<ul>
+<li>Enter a name for this new data source in the <strong>Name</strong> field.</li>
+<li>Check the <strong>Default</strong> option so this data source will be preselected in new panels you create.</li>
+<li>Select <strong>Zabbix</strong> from the <strong>Type</strong> drop down list.</li>
+<li>Fill in the <strong>Url</strong> field with the full path to the Zabbix API, which will be <code>http://<span class="highlight">your_zabbix_server_ip_address</span>/zabbix/api_jsonrpc.php</code>.</li>
+<li>Fill in the <strong>Username</strong> and <strong>Password</strong> fields with the username and password for Zabbix. The default username is <code><span class="highlight">admin</span></code> and the default password is <code><span class="highlight">zabbix</span></code>.</li>
+<li>Enable the <strong>Trends</strong> option;  it will increase Grafana's performance when displaying long time periods.</li>
+</ul>
+
+<p>You can leave the other options at their default values. </p>
+
+<p>Click the <strong>Add</strong> button to test and save the configuration.  You'll  see a success message that looks like the following:</p>
+
+<p><img src="https://assets.digitalocean.com/articles/grafana_zabbix_cent7/Meq7eZv.png" alt="Successful test of the connection to Zabbix"></p>
+
+<p>If you do not see this message, check your credentials and test again.</p>
+
+<p>Now let's look at the Zabbix dashboard that came with the plugin. Select <strong>Zabbix server Dashboard</strong> from the dropdown list at the top of the screen. When you select it, the dashboard displays information about your Zabbix server:</p>
+
+<p><img src="http://skitch.bphogan.com/2016-11-03_4h9cn31lu8vn82s_Grafana_-_Zabbix_Server_Dashboard.png" alt="The Zabbix Server Dashboard"></p>
+
+<p>This dashboard is pretty informative, but you can create your own custom dashboard from scratch.</p>
+
+<h2 id="step-4-—-creating-a-custom-zabbix-dashboard">Step 4 — Creating a Custom Zabbix Dashboard</h2>
+
+<p>Let's create a dashboard for Zabbix that shows us CPU usage and file system information in real-time.</p>
+
+<p>Open the drop-down list on the top of the screen and click the <strong>Create New</strong> button. A new empty dashboard will be created.</p>
+
+<p>Each dashboard consists of rows which contain blocks. When you create a new dashboard, you automatically get one row. Click on the green menu on the left of the row to access the row's action menu. Here you can add new panels, set the row's height, move it, collapse it, or delete it.</p>
+
+<p>First we will create a graph that displays the CPU usage of our Zabbix server. Select the <strong>Add Panel</strong> item and then click <strong>Graph</strong> to insert a new graph into the row.</p>
+
+<p>You'll be greeted with a form with several tabs, with the <strong>Metrics</strong> tab selected. Since we've set our Zabbix data source as the default, a new query was added for you. You just have to specify the following options: </p>
+
+<ul>
+<li>Set <strong>Host Group</strong> to <code><span class="highlight">Zabbix servers</span></code>.</li>
+<li>Set <strong>Host</strong> to <code><span class="highlight">Zabbix server</span></code>.</li>
+<li>Set <strong>Application</strong> to <code><span class="highlight">CPU</span></code>.</li>
+<li>Set <strong>Item</strong> to <code><span class="highlight">Processor load (1 min average per core)</span></code>.</li>
+</ul>
+
+<p>You will see you current processor load on the graph.</p>
+
+<p><img src="https://assets.digitalocean.com/articles/grafana_zabbix_cent7/h3TY7qh.png" alt="Graph metrics options"></p>
+
+<p>Then navigate to the <strong>General</strong> tab and set the <strong>Title</strong> field to <code>Processor load</code> and set the <strong>Span</strong> option to <code>6</code>. One row can contain up to 12 blocks, so setting this value to 6 makes the panel take up half of the screen.</p>
+
+<p><img src="https://assets.digitalocean.com/articles/grafana_zabbix_cent7/JjDiO8Z.png" alt="Graph general options"></p>
+
+<p>Now you can click on <strong>Back to dashboard</strong>  to see the result:</p>
+
+<p><img src="https://assets.digitalocean.com/articles/grafana_zabbix_cent7/UJCc6Wm.png" alt="Dashboard"></p>
+
+<p><span class='note'><strong>Note</strong>: If you don't see any data, you may be zoomed out too far. Click the clock icon in the upper right of the interface and choose *<em>Last 1 hour</em> from the list of options.<br></span></p>
+
+<p>Let's add another chart. To do this, you can repeat the previous steps or duplicate the existing graph. To duplicate the existing graph, select the panel title and click <strong>Duplicate</strong>. Then select the new graph's title and select the <strong>Edit</strong> option.  Then apply the following settings:</p>
+
+<ul>
+<li>Change <strong>Title</strong> to <code><span class="highlight">CPU usage</span></code>.</li>
+<li>Select the <strong>Metrics</strong> tab and change the <strong>Item</strong> field to <code><span class="highlight">/CPU.*/</span></code>. </li>
+</ul>
+
+<p>You can use Regular Expression patterns for host or metric names. Just be sure to wrap the pattern in forward slashes (<code>/</code>). </p>
+
+<p>You can also show summary statistics. Select the <strong>Legend</strong> tab and you'll see some options and values you can select. </p>
+
+<ul>
+<li>Under <strong>Options</strong>, check <strong>As table</strong> and <strong>To The right</strong>.<br></li>
+<li>Under <strong>Values</strong>, select  <strong>Min</strong>, <strong>Max</strong>, <strong>Avg</strong>,  and <strong>Current</strong>.</li>
+</ul>
+
+<p>Now click <strong>Back to dashboard</strong> to see the result, which will look like this:</p>
+
+<p><img src="https://assets.digitalocean.com/articles/grafana_zabbix_cent7/AlI2UKI.png" alt="Dashboard"></p>
+
+<p>Next, add a <strong>Singlestat</strong> panel to show a single value for a particular metric. Create a new row by clicking <strong>Add row</strong> button and then select the row's menu, choose <strong>Add panel</strong>, and select the <strong>Singlestat</strong> item.</p>
+
+<p>Set the <strong>Metrics</strong> options as follows:</p>
+
+<ul>
+<li>Set <strong>Host Group</strong> to <code><span class="highlight">Zabbix servers</span></code>.</li>
+<li>Set <strong>Host</strong> to <code><span class="highlight">Zabbix server</span></code>.</li>
+<li>Set <strong>Application</strong> to  <code><span class="highlight">Filesystems</span></code>.</li>
+<li>Set <strong>Item</strong> to <code><span class="highlight">Free disk space on / (percentage)</span></code>.</li>
+</ul>
+
+<p>Next, switch to the <strong>General</strong> tab and set the <strong>Title</strong> field to <code><span class="highlight">Free disk space on /</span></code>.</p>
+
+<p>Then switch to the <strong>Options</strong> tab and configure these options:</p>
+
+<ul>
+<li>Enable the <code>Show</code> option for <strong>Gauge</strong>.</li>
+<li>Set <strong>Thresholds</strong> to <code><span class="highlight">10,20</span></code>. This will display these thresholds on the gauge.</li>
+<li>Select the <code>current</code> option from the <strong>Value</strong> drop-down list.</li>
+</ul>
+
+<p>The gauge now looks like this:</p>
+
+<p><img src="https://assets.digitalocean.com/articles/grafana_zabbix_cent7/38ybcGT.png" alt="Gauge"></p>
+
+<p>Return to the dashboard and press <code>CTRL+S</code> to save it.</p>
+
+<p>Now let's test how this gauge responds to real-time events. To do so we will manually reduce free space on the disk and see what the dashboard displays.</p>
+
+<p>Log in to your Zabbix server if you're not logged in currently:</p>
+<pre class="code-pre command local-environment"><code langs=""><ul class="prefixed"><li class="line" prefix="$">ssh sammy@<span class="highlight">your_zabbix_server_ip_address</span>
+</li></ul></code></pre>
+<p>Once logged in, determine how much free space is available on the file system. You can do this with the <code>df</code> command:</p>
+<pre class="code-pre command"><code langs=""><ul class="prefixed"><li class="line" prefix="$">df -h
+</li></ul></code></pre>
+<p>You will see the following output:</p>
+<pre class="code-pre "><code langs=""><div class="secondary-code-label " title="Output">Output</div>Filesystem      Size  Used Avail Use% Mounted on
+<span class="highlight">/dev/vda1        20G  1.5G   18G   8% /</span>
+devtmpfs        236M     0  236M   0% /dev
+tmpfs           245M     0  245M   0% /dev/shm
+tmpfs           245M  8.3M  237M   4% /run
+tmpfs           245M     0  245M   0% /sys/fs/cgroup
+tmpfs            49M     0   49M   0% /run/user/0
+</code></pre>
+<p>In this case, there's 18 GB of free space. The amount of free space on your server will vary. Reduce the free space on the root partition below the 20% threshold by using the <code>fallocate</code> command to create one big temporary file:</p>
+<pre class="code-pre command"><code langs=""><ul class="prefixed"><li class="line" prefix="$">fallocate -l <span class="highlight">15G</span> /tmp/test.img
+</li></ul></code></pre>
+<p>Set the file size depending on the amount of free space on your server.</p>
+
+<p>Then give Zabbix a couple of minutes to update its data. Refresh the dashboard and you'll see that the gauge changed its color to reflect the free space issue:</p>
+
+<p><img src="https://assets.digitalocean.com/articles/grafana_zabbix_cent7/cTfYrH7.png" alt="Warning"></p>
+
+<p>Finally, let's show active Zabbix triggers on the dashboard. Create a new row and then select the row's menu, select <strong>Add panel</strong>, and choose the <strong>Zabbix Triggers</strong> item.</p>
+
+<p>You will see the active trigger notifying you about the lack of free space on the server.</p>
+
+<p><img src="https://assets.digitalocean.com/articles/grafana_zabbix_cent7/vJtrBT6.png" alt="Free space trigger"></p>
+
+<p>Select <strong>Back to dashboard</strong> and save the dashboard with <code>CTRL+S</code>. Your dashboard will now look like this:</p>
+
+<p><img src="https://assets.digitalocean.com/articles/grafana_zabbix_cent7/u63Higl.png" alt="The completed dashboard"></p>
+
+<p>You can now use this simple dashboard to get a quick look at the current state of your server.</p>
+
+<p>Don't forget to remove the temporary file you created to free up space on your disk. On your Zabbix server, issue the command:</p>
+<pre class="code-pre command"><code langs=""><ul class="prefixed"><li class="line" prefix="$">rm /tmp/test.img
+</li></ul></code></pre>
+<p>This will remove the <code>test.img</code> file. In a few minutes, the dashboard will update again to reflect the changes on the file system.</p>
+
+<h2 id="conclusion">Conclusion</h2>
+
+<p>In this tutorial, you learned how to install and configure Grafana, and you created a custom dashboard with panels that displayed data from Zabbix. You can show these dashboards on desktops or even large screens to allow administrators to see the state of your IT infrastructure.  Each panel on a dashboard can display data from a different server, and you can use Grafana to filter the data in many useful ways.  It's difficult to describe all of Grafana's features in one tutorial, so explore, experiment, and build your own beautiful dashboards.</p>
+
+    </div>
+</div>
+
+<div class="tutorial-footer">
+  <div class='tutorial-footer-details'>
+
+  <div class='postable-info-bar-container'>
+  <div class='postable-info-bar'>
+    <div class='left-section'>
+        <div class='tutorial-author-avatar'>
+    <a href="/community/users/neformat"><img alt="neformat" class="avatar avatar-small" src="https://secure.gravatar.com/avatar/88f85d1c53eae5038f135b1a670b0858?secure=true&d=identicon" width="80" height="80" /></a>
+  </div>
+  <div class='author-and-date'>
+    <div class='tutorial-author'>
+      <div class='by'>By: </div>
+      <a href="/community/users/neformat">Vadym Kalsin</a>
+    </div>
+  </div>
+
+    </div>
+    <div class='right-section'>
+      <div class="upvote-container">
+        <button name="button" type="button" class="new-upvote-button" data-upvotable-id="2106" data-upvotable-type="Tutorial" data-include-caret="false"><span class="icon new-upvote-icon"><svg class='svg-icon svg-icon-heart'><use xlink:href='https://www.digitalocean.com/assets/community/icon-sprite-d76eb75d70ccf8ffb4c0b47b7dbc88ca.svg#icon-heart'></use></svg></span><span class="new-upvote-text">Upvote</span><span class="new-upvote-count">3</span></button>
+      </div>
+      <div class="section-item section-item-subscribe">
+  <span class="opt-in-switch off signed-out-subscribe">
+    <span class="subscribe-label">
+      <span class="icon icon-subscribe"></span>
+      <span class="subscription-label subscribe">Subscribe</span>
+      <span class="icon icon-subscribed"></span>
+      <span class="subscription-label subscribed">Subscribed</span>
+    </span>
+    <a data-toggle="modal" data-target="#sign-in-modal" class="mini-switch-container" href="javascript:void(0);"><div class="mini-switch off signed-out-subscribe"><div class="switch-handle"></div></div></a>
+  </span>
+</div>
+
+<div class='section-item social-sharing-item'>
+  <div class="sharing">
+  <a class="share-button" href="#" data-toggle="modal" data-target="#share-modal">
+    <span class="icon icon-share-square"></span>
+    <span class="share-button-text">Share</span>
+  </a>
+</div>
+
+</div>
+
+    </div>
+  </div>
+</div>
+
+
+  <div class='section-content tutorial-contributors two'>
+
+      <div class='tutorial-footer-user'>
+        <div class='tutorial-footer-user-avatar-container'>
+          <a href="/community/users/bhogan"><div class="mod-avatar mod-avatar-small"><img alt="bhogan" class="avatar avatar-small" src="https://secure.gravatar.com/avatar/d753bf40d7283f16ec0db2c9b0d18b58?secure=true&d=identicon" width="80" height="80" /><span class="mod-star" title="MOD" data-toggle="tooltip" data-container="body"><span class="mod-star-icon" /></span></div></a>
+        </div>
+        <div class='user-info'>
+          <div class='tutorial-user-type'>Editor:</div>
+          <a class="" href="/community/users/bhogan">Brian Hogan</a>
+        </div>
+      </div>
+
+  </div>
+</div>
+
+
+  
+    <div class='tutorial-ctas'>
+  <div class='section-content'>
+    <div class='cta-description'>
+      <h2>Spin up an SSD cloud server in under a minute.</h2>
+
+      <p>Simple setup. Full root access. Straightforward pricing.</p>
+
+      <a class="cloud-tutorial-cta" href="https://www.digitalocean.com/?utm_medium=community&amp;utm_source=community_gencta&amp;utm_campaign=needaserver&amp;utm_content=how-to-install-and-configure-grafana-to-plot-beautiful-graphs-from-zabbix-on-centos-7">Deploy Server</a>
+    </div>
+  </div>
+</div>
+    <div class='related-tutorials'>
+    <div class='section-content'>
+      <h2>Related Tutorials</h2>
+
+      <ul>
+        <li><a class="related-link" href="/community/tutorials/an-introduction-to-tracking-statistics-with-graphite-statsd-and-collectd">An Introduction to Tracking Statistics with Graphite, StatsD, and CollectD</a></li>
+<li><a class="related-link" href="/community/tutorials/how-to-install-and-configure-monit">How To Install and Configure Monit</a></li>
+<li><a class="related-link" href="/community/tutorials/how-to-monitor-zabbix-alerts-with-alerta-on-ubuntu-16-04">How To Monitor Zabbix Alerts with Alerta on Ubuntu 16.04</a></li>
+<li><a class="related-link" href="/community/tutorials/how-to-install-and-configure-zabbix-to-securely-monitor-remote-servers-on-ubuntu-16-04">How to Install and Configure Zabbix to Securely Monitor Remote Servers on Ubuntu 16.04</a></li>
+<li><a class="related-link" href="/community/tutorials/how-to-monitor-zabbix-alerts-with-alerta-on-centos-7">How To Monitor Zabbix Alerts with Alerta on CentOS 7</a></li>
+
+      </ul>
+    </div>
+  </div>
+
+</div>
+
+<div class="content-comments">
+  <div class="section-content">
+    <div class="tutorial commentable" id="tutorial_2106">
+
+  <div class="comments-header">
+    <h4 class="comments-count"><span>1 Comment</span></h4>
+  </div>
+
+  <div class="response response-form no-avatar">
+  <div class="js-display-on-error flash error hidden"></div>
+
+
+  <form class="content-form disabled-form" id="new_comment" action="/community/tutorials/how-to-install-and-configure-grafana-to-plot-beautiful-graphs-from-zabbix-on-centos-7/comments" accept-charset="UTF-8" data-remote="true" method="post"><input name="utf8" type="hidden" value="&#x2713;" />
+
+    <textarea name="comment[content]" id="comment_content" placeholder="Leave a comment..." class="js-comment-content tutorial-comment-field" data-markdown="true"></textarea>
+
+      <div class="log-in-notice "><a href="/community/auth/digitalocean">Log In to Comment</a></div>
+
+    <div class='clearfix'></div>
+</form>
+</div>
+
+
+  <div class="comments">
+    <ul class="response-list">
+          <a class="js-click-on-load hidden" rel="nofollow" data-remote="true" href="/community/tutorials/how-to-install-and-configure-grafana-to-plot-beautiful-graphs-from-zabbix-on-centos-7/comments">Load</a>
+    </ul>
+
+      <div class='comments-spinner'><div class="spinner spinner-large">
+  <div class="bounce1"></div>
+  <div class="bounce2"></div>
+  <div class="bounce3"></div>
+  
+</div>
+</div>
+  </div>
+
+  <div class='load-more-container'></div>
+</div>
+
+
+  </div>
+</div>
+
+<div class="creative-commons">
+  <a class="creative-commons-image" href="https://creativecommons.org/licenses/by-nc-sa/4.0/"><img rel="license" alt="Creative Commons License" src="/assets/community/creativecommons-08b32a9279fcd47fcd78ac6a26331389.png" /></a>
+    <div class="license-text">This work is licensed under a <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>.</div>
+</div>
+
+
+
+
+
+        <div class="clearfix"></div>
+      </div>
+
+      <footer class='Footer'>
+  <span class="Footer-logo icon-sammy"></span>
+
+  <div>Copyright &copy; 2017 DigitalOcean&trade; Inc.</div>
+
+  <ul class="Footer-nav">
+    <li><a href="/community">Community</a></li>
+    <li><a href="/community/tutorials">Tutorials</a></li>
+    <li><a href="/community/questions">Questions</a></li>
+    <li><a href="/community/projects">Projects</a></li>
+    <li><a href="/community/tags">Tags</a></li>
+    <li><a href="/community/newsletter">Newsletter</a></li>
+    <li>
+      <a href="/community/tutorials/feed">
+        RSS <span class="icon-rss"></span>
+</a>    </li>
+  </ul>
+
+  <br />
+
+  <ul class="Footer-nav Footer-nav--secondary">
+    <li><a href="https://www.digitalocean.com/features/one-click-apps/">Distros &amp; One-Click Apps</a></li>
+    <li><a href="https://www.digitalocean.com/legal/terms/">Terms, Privacy, &amp; Copyright</a></li>
+    <li><a href="https://www.digitalocean.com/security/">Security</a></li>
+      <li><a data-toggle="modal" data-target="#sign-in-modal" href="#">Report a Bug</a></li>
+    <li><a href="/community/get-paid-to-write">Get Paid to Write</a></li>
+    <li><a href="http://store.digitalocean.com/">Shop</a></li>
+  </ul>
+</footer>
+
+
+
+
+
+      <div id='sign-in-modal' class='modal fade mini-modal' style="display: none;">
+  <div class='modal-dialog'>
+    <div class='modal-content'>
+      <div class='modal-header'>
+        <h1>Almost there!</h1>
+        <a class='close-button' data-dismiss='modal' aria-label="close"  href=''><span class='icon icon-close-light'></span></a>
+      </div>
+      <div class='modal-body'>
+        <div class='sign-in-message'>Sign into your account, or create a new one, to start interacting.</div>
+
+        <div class='sign-in-modal-actions'>
+          <a class="sign-in-link button blue-button" data-default-url="/community/auth/digitalocean" href="/community/auth/digitalocean">Log In</a>
+          <a class="sign-up-link button green-button" data-default-url="/community/auth/digitalocean?display=sessionless+register" href="/community/auth/digitalocean?display=sessionless+register">Sign Up</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+    
+  <script>
+    $(function() {
+      if (!!window.init_sharing) {
+        window.init_sharing();
+      }
+      new window.NewsletterSignup();
+      new window.GrowableMarkdown({ target: '[data-growable-markdown]' });
+
+      window.Bugsnag.beforeNotify = function(payload, metaData) {
+        // custom logic to determine groupingHash
+        metaData.groupingHash = "tutorialShow";
+      }
+    });
+  </script>
+
+  <div id='report-a-bug-modal' class='modal fade mini-modal' style="display: none;">
+    <div class='modal-dialog'>
+      <div class='modal-content'>
+        <div class='modal-header'>
+          <h1>Report a Bug</h1>
+          <a class='close-button' data-dismiss='modal' aria-label="close" href=''><span class='icon icon-close-light'></span></a>
+        </div>
+        <div class='modal-body'>
+          <div class='report-a-bug-message text-center'>Use this form to report bugs related to the Community</div>
+          <div class='report-a-bug-actions do-form'>
+            <div class='form-wrap'>
+              <form class="new_bug_report" id="new_bug_report" action="/community/bug_reports" accept-charset="UTF-8" method="post"><input name="utf8" type="hidden" value="&#x2713;" /><input type="hidden" name="authenticity_token" value="Aymdm3UFOHTQqji2y1XccFuNJFFD0P4GsgtkieSM+KYXDaQUkN2UfbAUJClBd/uJHfenmECbUAZl1GDqKzx2bA==" />
+                <fieldset name="report-a-bug-info">
+                <legend class="sr-only">Report a bug:</legend>
+                  <div class="field">
+                    <label for="bug_reporter_name" class="sr-only">Name</label>
+                    <input placeholder="Name" id="bug_reporter_name" type="text" name="bug_report[name]" />
+                  </div>
+                  <div class="field">
+                    <label for="bug_reporter_email" class="sr-only">Email</label>
+                    <input name="Email" placeholder="Email" id="bug_reporter_email" required="required" type="text" />
+                  </div>
+                  <div class="field">
+                    <label for="bug_reporter_message" class="sr-only">Message</label>
+                    <textarea name="Message" placeholder="Message" id="bug_reporter_message" required="required"></textarea>
+                  </div>
+
+                  <div class="field actions">
+                    <input type="submit" name="commit" value="Submit" class="button" />
+                  </div>
+                </fieldset>
+</form>            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+    
+  </body>
+</html>
